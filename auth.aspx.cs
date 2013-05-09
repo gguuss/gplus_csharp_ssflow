@@ -16,7 +16,15 @@ namespace GPlus_ServerSideFlow
 
         protected void Page_Load(object sender, EventArgs e)
         {
+
             GPlusWrapper.PlusWrapper pw = new GPlusWrapper.PlusWrapper();
+            if (Request.Params["code"] != null)
+            {
+              OAuthResponseObject response = ManualCodeExchanger.ExchangeCode(Request.Params["code"]);
+              if (response != null) {
+                pw.setTokens(response.access_token, response.refresh_token);  
+              }
+            }                                    
             me = pw.Authenticate();
             pw.ListActivities("me");
             Moment wrote = pw.WriteDemoMoment();

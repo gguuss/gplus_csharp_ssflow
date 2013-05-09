@@ -86,6 +86,7 @@
     <Compile Include="auth.aspx.designer.cs">
       <DependentUpon>auth.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ManualCodeExchanger.cs" />
     <Compile Include="PlusWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

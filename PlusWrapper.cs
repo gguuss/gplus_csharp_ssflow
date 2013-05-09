@@ -64,11 +64,14 @@ namespace GPlusWrapper
         private string _accessToken; // access token, used for API calls and expires
         private string _refreshToken; // refresh token, used to generate fresh access tokens
 
-        private static class ClientCredentials
+        public static class ClientCredentials
         {
             // These come from the APIS console, https://code.google.com/apis/console
-            static public string ClientID = "YOUR_CLIENT_ID";
-            static public string ClientSecret = "YOUR_CLIENT_SECRET";
+          static public string ClientID = "YOUR_CLIENT_ID";
+          static public string ClientSecret = "YOUR_CLIENT_SECRET";
+          // Make sure this is properly set in your API console and matches your site
+          // As it is, this will work with the current project
+          static public string RedirectUri = "http://localhost:8080/auth.aspx";
         }
 
         // CreateAuthenticator
@@ -84,7 +87,7 @@ namespace GPlusWrapper
             if (description.AuthorizationEndpoint.AbsoluteUri.IndexOf("request_visible_actions") < 1)
             {
                 string paramChar = (description.AuthorizationEndpoint.AbsoluteUri.IndexOf('?') > 0) ? "&" : "?";
-                description.AuthorizationEndpoint = new Uri(description.AuthorizationEndpoint.AbsoluteUri + paramChar + "request_visible_actions=http://schemas.google.com/AddActivity");
+                description.AuthorizationEndpoint = new Uri(description.AuthorizationEndpoint.AbsoluteUri + paramChar + "request_visible_actions=http:%2f%2Fschemas.google.com%2FAddActivity");
             }
 
             if (description.AuthorizationEndpoint.AbsoluteUri.IndexOf("offline") < 1)
@@ -110,6 +113,18 @@ namespace GPlusWrapper
         /// <returns>An authorization state that can be used for API queries </returns>
         private IAuthorizationState GetAuthorization(WebServerClient client)
         {
+            if (_authstate == null)
+            {
+              if (_refreshToken != null)
+              {
+                _authstate = CreateState(_refreshToken, false);
+              }
+              if (_accessToken != null)
+              {
+                _authstate = CreateState(_accessToken, true);
+              }
+            }
+
             // If this user is already authenticated, then just return the auth state.
             IAuthorizationState state = _authstate;
             if (state != null)
@@ -119,6 +134,7 @@ namespace GPlusWrapper
 
             // Check if an authorization request already is in progress.
             HttpRequestInfo reqinfo = new HttpRequestInfo(HttpContext.Current.Request);
+            //if (reqinfo)
             state = client.ProcessUserAuthorization(reqinfo);
 
             // Check to see if we have an access token and use that to generate the state.
@@ -172,6 +188,12 @@ namespace GPlusWrapper
                 state.RefreshToken = token;
             }
             return state;
+        }
+
+        public void setTokens(String accessToken, String refreshToken)
+        {
+          _accessToken = accessToken;
+          _refreshToken = refreshToken;
         }
 
         // RefreshService
