@@ -1,3 +1,9 @@
+# WARNING
+
+This code is rather stale.  For the latest examples of how to use C# with Google+, please start from the official repo:
+
+https://github.com/googleplus/gplus-quickstart-csharp
+
 # Google+ Server-side flow demo
 
 This project demonstrates how to use the Google+ API using the server-side OAUTH v2 flow. 
