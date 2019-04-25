@@ -1,6 +1,6 @@
 # WARNING
 
-[Google+ API is being turned down](https://developers.google.com/+/api-shutdown).
+[Google+ API is shut down](https://developers.google.com/+/api-shutdown).
 
 This code is rather stale.  For the latest examples of how to use C# with Google+, please start from the official repo:
 
